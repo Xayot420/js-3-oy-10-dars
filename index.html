@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ob-havo Ilovasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #87CEEB;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+        h1 {
+            color: #333;
+        }
+        .temp {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FF4500;
+        }
+        .city {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+        }
+        .details {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .input-container {
+            margin: 20px 0;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ob-havo</h1>
+        <div class="input-container">
+            <input type="text" id="cityInput" placeholder="Shahar nomini kiriting">
+            <button onclick="getWeather()">Qidirish</button>
+        </div>
+        <img id="weatherIcon" class="weather-icon" src="" alt="">
+        <p class="temp" id="temperature">--°C</p>
+        <p class="city" id="cityName">Shahar nomi</p>
+        <p class="details" id="humidity">Namlik: --%</p>
+        <p class="details" id="windSpeed">Shamol tezligi: -- m/s</p>
+    </div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            const apiKey = 'YOUR_API_KEY'; // OpenWeatherMap API kalitini shu joyga qo'ying
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.cod === 200) {
+                    document.getElementById('temperature').textContent = `${data.main.temp}°C`;
+                    document.getElementById('cityName').textContent = data.name;
+                    document.getElementById('humidity').textContent = `Namlik: ${data.main.humidity}%`;
+                    document.getElementById('windSpeed').textContent = `Shamol tezligi: ${data.wind.speed} m/s`;
+                    const iconCode = data.weather[0].icon;
+                    document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+                    document.getElementById('weatherIcon').alt = data.weather[0].description;
+                } else {
+                    alert('Shahar topilmadi!');
+                }
+            } catch (error) {
+                alert('Xatolik yuz berdi, qaytadan urinib ko‘ring!');
+            }
+        }
+    </script>
+</body>
+</html>
